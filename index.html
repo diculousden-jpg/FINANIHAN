@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FINANIHAN - Farmers Marketplace</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#087a3e;--dark:#075c2f;--light:#f3f8f3;--orange:#f97316;--text:#1f2937}
+body{font-family:Arial,Helvetica,sans-serif;background:#f7faf7;color:var(--text)}
+button,input{font:inherit}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(90deg,#064e27,#0b7a3d);color:#fff;padding:14px 4%;display:flex;align-items:center;gap:24px;box-shadow:0 3px 12px #0002}
+.brand{min-width:205px}.logo{font-size:28px;font-weight:800}.tagline{font-size:12px;color:#d8f4df;margin-top:2px}
+.search{flex:1;display:flex;max-width:720px;background:#fff;border-radius:9px;overflow:hidden}.search input{flex:1;border:0;padding:13px 15px;outline:0;color:#222}.search button{width:55px;border:0;background:#f6b800;cursor:pointer;font-size:20px}
+.account-btn{border:0;background:#fff;color:#075c2f;border-radius:8px;padding:11px 15px;font-weight:700;cursor:pointer;white-space:nowrap}
+.cart-btn{position:relative;border:0;background:transparent;color:#fff;font-size:28px;cursor:pointer;padding:4px 8px}.cart-count{position:absolute;top:-3px;right:-2px;background:#f97316;color:#fff;border-radius:50%;min-width:21px;height:21px;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.hero{min-height:310px;margin:0;background:linear-gradient(90deg,#064e27cc,#064e2740),url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=85') center/cover;display:flex;align-items:center}
+.hero-inner{width:min(1200px,92%);margin:auto;color:#fff;padding:55px 0}.hero h1{font-size:48px;max-width:680px;line-height:1.08}.hero p{font-size:19px;margin:16px 0 25px;max-width:650px}.shop-btn{background:#f6b800;color:#172b18;border:0;padding:13px 21px;border-radius:8px;font-weight:800;cursor:pointer}
+.categories,.products,.farmer-section{width:min(1200px,92%);margin:30px auto}.section-title{font-size:27px;color:#075c2f;margin-bottom:18px}.category-list{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.category{background:#fff;border:1px solid #dbe7dc;border-radius:12px;padding:18px;text-align:center;cursor:pointer;font-weight:700;transition:.2s}.category:hover,.category.active{border-color:var(--green);box-shadow:0 3px 12px #087a3e20;transform:translateY(-2px)}.category-icon{display:block;font-size:32px;margin-bottom:7px}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.product{background:#fff;border:1px solid #e0e7e1;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px #0000000b;display:flex;flex-direction:column}.product-image{width:100%;height:205px;overflow:hidden;background:#eef5ee}.product-image img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .3s}.product:hover .product-image img{transform:scale(1.04)}.product-body{padding:14px;display:flex;flex-direction:column;flex:1}.badge{display:inline-block;align-self:flex-start;background:#e7f6ec;color:#087a3e;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:700;margin-bottom:8px}.product h3{font-size:18px;margin-bottom:8px}.farmer,.location{font-size:13px;color:#69746c;margin-bottom:7px}.price{font-size:22px;color:var(--green);font-weight:800;margin-top:auto;padding-top:8px}.unit{font-size:12px;color:#777;font-weight:400}.add-btn{width:100%;margin-top:12px;padding:11px;border:0;background:var(--green);color:#fff;border-radius:7px;font-weight:800;cursor:pointer}.add-btn:hover{background:var(--dark)}.add-btn.added{background:#14532d}
+.no-results{text-align:center;padding:35px;background:#fff;border-radius:10px;color:#777;display:none}
+.farmer-box{background:#fff4d7;border-radius:14px;padding:30px;text-align:center}.farmer-box h2{color:#075c2f;margin-bottom:8px}.farmer-box p{color:#5f665f;margin-bottom:18px}.sell-btn{background:var(--green);color:#fff;border:0;border-radius:7px;padding:12px 22px;font-weight:800;cursor:pointer}
+footer{margin-top:45px;background:#064e27;color:#fff;text-align:center;padding:32px 20px}.footer-links{margin:15px 0}.footer-links button{background:none;border:0;color:#d8f4df;margin:0 8px;cursor:pointer}
+.toast{position:fixed;right:22px;bottom:22px;background:#0b7a3d;color:#fff;padding:14px 18px;border-radius:9px;box-shadow:0 8px 25px #0003;transform:translateY(120px);opacity:0;transition:.25s;z-index:100}.toast.show{transform:translateY(0);opacity:1}
+.modal-backdrop{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:90;padding:20px}.modal-backdrop.show{display:flex}.modal{background:#fff;border-radius:14px;width:min(520px,100%);max-height:85vh;overflow:auto;padding:22px;box-shadow:0 15px 45px #0005}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.close{border:0;background:#eee;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:20px}.cart-item{display:grid;grid-template-columns:78px 1fr auto;align-items:center;border-bottom:1px solid #eee;padding:14px 0;gap:12px}.cart-thumb{width:78px;height:68px;border-radius:9px;object-fit:cover;background:#eef5ee;border:1px solid #e5e7eb}.cart-info{min-width:0}.cart-name{font-weight:800;font-size:16px;margin-bottom:4px}.cart-meta{color:#777;font-size:12px;margin-bottom:5px}.cart-subtotal{font-weight:800;color:var(--green);font-size:14px;margin-top:3px}.qty{display:flex;align-items:center;gap:7px;white-space:nowrap}.qty button{width:30px;height:30px;border:1px solid #ccc;background:#fff;border-radius:6px;cursor:pointer;font-weight:800}.qty button:hover{background:#f0f7f1}.remove-btn{border:0!important;background:#fee2e2!important;color:#b91c1c!important;width:30px!important}.remove-btn:hover{background:#fecaca!important}.cart-total{font-size:20px;font-weight:800;color:var(--green);text-align:right;margin:18px 0}.checkout-btn{width:100%;padding:12px;background:var(--green);color:#fff;border:0;border-radius:7px;font-weight:800;cursor:pointer}.empty{text-align:center;color:#777;padding:25px}
+@media(max-width:1000px){.product-grid{grid-template-columns:repeat(3,1fr)}.category-list{grid-template-columns:repeat(3,1fr)}header{gap:12px}.brand{min-width:auto}.search{order:3;flex-basis:100%;max-width:none}}
+@media(max-width:700px){.product-grid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:36px}.category-list{grid-template-columns:repeat(2,1fr)}header{flex-wrap:wrap}}
+@media(max-width:460px){.product-grid{grid-template-columns:1fr}.cart-item{grid-template-columns:60px 1fr;position:relative}.cart-thumb{width:60px;height:60px}.qty{grid-column:2;justify-content:flex-start}.cart-subtotal{margin-bottom:4px}.hero{min-height:280px}.hero-inner{padding:35px 0}.hero h1{font-size:31px}.categories,.products,.farmer-section{width:94%}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">🌾 FINANIHAN</div><div class="tagline">Direktang Ani, Direktang Kita</div></div>
+  <div class="search"><input id="searchInput" type="search" placeholder="Maghanap ng produkto, farmer o lugar..."><button id="searchBtn" aria-label="Search">🔍</button></div>
+  <button class="account-btn" id="dashboardButton" style="display:none">Dashboard</button>
+  <button class="account-btn" id="accountButton">Register / Login</button>
+  <button class="cart-btn" id="cartButton" aria-label="Cart">🛒<span class="cart-count" id="cartCount">0</span></button>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Mga Produktong Pang-agrikultura, Direkta Mula sa Farmers</h1>
+    <p>Suportahan ang lokal na magsasaka at bumili ng sariwa, de-kalidad at lokal na paninda.</p>
+    <button class="shop-btn" id="shopBtn">🛒 Mamili Ngayon</button>
+  </div>
+</section>
+
+<section class="categories">
+  <h2 class="section-title">Mga Kategorya</h2>
+  <div class="category-list">
+    <div class="category active" data-category="all"><span class="category-icon">🌱</span>Lahat</div>
+    <div class="category" data-category="vegetables"><span class="category-icon">🥬</span>Gulay</div>
+    <div class="category" data-category="fruits"><span class="category-icon">🍌</span>Prutas</div>
+    <div class="category" data-category="rice"><span class="category-icon">🌾</span>Bigas</div>
+    <div class="category" data-category="livestock"><span class="category-icon">🐔</span>Livestock</div>
+  </div>
+</section>
+
+<section class="products" id="products">
+  <h2 class="section-title">🌾 Mga Produkto ng Farmers</h2>
+  <div class="product-grid" id="productGrid">
+    <article class="product" data-category="fruits" data-name="fresh mango" data-farmer="juan dela cruz" data-location="guimaras" data-price="120">
+      <div class="product-image"><img src="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=900&q=85" alt="Fresh mangoes"></div>
+      <div class="product-body"><span class="badge">Prutas</span><h3>Fresh Mango</h3><div class="farmer">👨‍🌾 Farmer: Juan Dela Cruz</div><div class="location">📍 Guimaras</div><div class="price">₱120 <span class="unit">/ kilo</span></div><button class="add-btn">🛒 Idagdag sa Cart</button></div>
+    </article>
+    <article class="product" data-category="vegetables" data-name="fresh pechay" data-farmer="maria santos" data-location="benguet" data-price="80">
+      <div class="product-image"><img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=85" alt="Fresh green vegetables"></div>
+      <div class="product-body"><span class="badge">Gulay</span><h3>Fresh Pechay</h3><div class="farmer">👨‍🌾 Farmer: Maria Santos</div><div class="location">📍 Benguet</div><div class="price">₱80 <span class="unit">/ kilo</span></div><button class="add-btn">🛒 Idagdag sa Cart</button></div>
+    </article>
+    <article class="product" data-category="rice" data-name="premium local rice" data-farmer="pedro garcia" data-location="nueva ecija" data-price="65">
+      <div class="product-image"><img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85" alt="Rice in sack"></div>
+      <div class="product-body"><span class="badge">Bigas</span><h3>Premium Local Rice</h3><div class="farmer">👨‍🌾 Farmer: Pedro Garcia</div><div class="location">📍 Nueva Ecija</div><div class="price">₱65 <span class="unit">/ kilo</span></div><button class="add-btn">🛒 Idagdag sa Cart</button></div>
+    </article>
+    <article class="product" data-category="fruits" data-name="lakatan banana" data-farmer="ana reyes" data-location="davao" data-price="90">
+      <div class="product-image"><img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=85" alt="Fresh bananas"></div>
+      <div class="product-body"><span class="badge">Prutas</span><h3>Lakatan Banana</h3><div class="farmer">👨‍🌾 Farmer: Ana Reyes</div><div class="location">📍 Davao</div><div class="price">₱90 <span class="unit">/ kilo</span></div><button class="add-btn">🛒 Idagdag sa Cart</button></div>
+    </article>
+    <article class="product" data-category="vegetables" data-name="fresh tomatoes" data-farmer="roberto cruz" data-location="bukidnon" data-price="100">
+      <div class="product-image"><img src="https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=900&q=85" alt="Fresh tomatoes"></div>
+      <div class="product-body"><span class="badge">Gulay</span><h3>Fresh Tomatoes</h3><div class="farmer">👨‍🌾 Farmer: Roberto Cruz</div><div class="location">📍 Bukidnon</div><div class="price">₱100 <span class="unit">/ kilo</span></div><button class="add-btn">🛒 Idagdag sa Cart</button></div>
+    </article>
+    <article class="product" data-category="rice" data-name="fresh corn" data-farmer="jose mendoza" data-location="isabela" data-price="70">
+      <div class="product-image"><img src="https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=900&q=85" alt="Fresh corn"></div>
+      <div class="product-body"><span class="badge">Bigas / Mais</span><h3>Fresh Corn</h3><div class="farmer">👨‍🌾 Farmer: Jose Mendoza</div><div class="location">📍 Isabela</div><div class="price">₱70 <span class="unit">/ kilo</span></div><button class="add-btn">🛒 Idagdag sa Cart</button></div>
+    </article>
+    <article class="product" data-category="livestock" data-name="fresh farm eggs" data-farmer="lito ramos" data-location="iloilo" data-price="180">
+      <div class="product-image"><img src="https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=900&q=85" alt="Farm fresh eggs"></div>
+      <div class="product-body"><span class="badge">Livestock</span><h3>Fresh Farm Eggs</h3><div class="farmer">👨‍🌾 Farmer: Lito Ramos</div><div class="location">📍 Iloilo</div><div class="price">₱180 <span class="unit">/ tray</span></div><button class="add-btn">🛒 Idagdag sa Cart</button></div>
+    </article>
+    <article class="product" data-category="livestock" data-name="native chicken" data-farmer="ramon flores" data-location="antique" data-price="350">
+      <div class="product-image"><img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=900&q=85" alt="Native chicken"></div>
+      <div class="product-body"><span class="badge">Livestock</span><h3>Native Chicken</h3><div class="farmer">👨‍🌾 Farmer: Ramon Flores</div><div class="location">📍 Antique</div><div class="price">₱350 <span class="unit">/ piece</span></div><button class="add-btn">🛒 Idagdag sa Cart</button></div>
+    </article>
+  </div>
+  <div id="farmerProducts"></div>
+  <div class="no-results" id="noResults">Walang produktong tumugma sa iyong hinahanap.</div>
+</section>
+
+<section class="farmer-section"><div class="farmer-box"><h2>👨‍🌾 Ikaw ba ay Farmer?</h2><p>I-market ang iyong ani at direktang makahanap ng buyers gamit ang FINANIHAN.</p><button class="sell-btn" id="sellBtn">🌱 Magbenta sa FINANIHAN</button></div></section>
+
+<footer><h2>🌾 FINANIHAN</h2><p>Direktang Ani, Direktang Kita.</p><div class="footer-links"><button id="aboutBtn">About Us</button><button id="contactBtn">Contact</button><button id="termsBtn">Terms</button><button id="adminBtn">Admin</button></div><small>© 2026 FINANIHAN. All Rights Reserved.</small></footer>
+
+<div class="toast" id="toast"></div>
+<div class="modal-backdrop" id="cartModal"><div class="modal"><div class="modal-head"><h2>🛒 Iyong Cart</h2><button class="close" id="closeCart">×</button></div><div id="cartItems"></div><div class="cart-total" id="cartTotal">Total: ₱0</div><button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script><script>
+(async () => {
+const CART_KEY="finanihanCartV2", PRODUCTS_KEY="finanihanProducts", SALES_KEY="finanihanSales", FEE_RATE=.05;
+let cart=[]; try{cart=JSON.parse(localStorage.getItem(CART_KEY)||"[]");if(!Array.isArray(cart))cart=[]}catch(e){cart=[]}
+const $=id=>document.getElementById(id); const fallbackImage="https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=900&q=80";
+const baseProducts=[...document.querySelectorAll(".product")];
+function esc(v){return String(v??"").replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function arr(key){try{const x=JSON.parse(localStorage.getItem(key)||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}}
+function saveCart(){localStorage.setItem(CART_KEY,JSON.stringify(cart));updateCartCount();renderCart()}
+function updateCartCount(){$("cartCount").textContent=cart.reduce((n,i)=>n+Number(i.qty||0),0)}
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>$('toast').classList.remove("show"),1800)}
+function addCart(product){const item=cart.find(i=>i.id===product.id||i.name===product.name);if(item)item.qty++;else cart.push({...product,qty:1});saveCart();toast("✅ "+product.name+" ay naidagdag sa cart.");if(product.button){product.button.classList.add("added");product.button.textContent="✓ Nasa Cart";setTimeout(()=>{product.button.classList.remove("added");product.button.textContent="🛒 Idagdag sa Cart"},900)}}
+function removeItem(id){cart=cart.filter(i=>i.id!==id);saveCart()}
+function changeQty(id,delta){const item=cart.find(i=>i.id===id);if(!item)return;item.qty+=delta;if(item.qty<=0)removeItem(id);else saveCart()}
+function renderCart(){const box=$("cartItems"),total=$("cartTotal");if(!box)return;if(!cart.length){box.innerHTML='<div class="empty">🛒 Walang laman ang cart.<br><small>Magdagdag ng produkto para makita ito rito.</small></div>';total.textContent="Total: ₱0";return}box.innerHTML=cart.map(i=>`<div class="cart-item"><img class="cart-thumb" src="${esc(i.image||fallbackImage)}" alt="${esc(i.name)}" onerror="this.src='${fallbackImage}'"><div class="cart-info"><div class="cart-name">${esc(i.name)}</div><div class="cart-meta">👨‍🌾 ${esc(i.farmer||'Local Farmer')} • ₱${Number(i.price).toLocaleString()} / ${esc(i.unit||'unit')}</div><div class="cart-subtotal">Subtotal: ₱${(Number(i.price)*Number(i.qty)).toLocaleString()}</div></div><div class="qty"><button data-minus="${esc(i.id)}">−</button><strong>${i.qty}</strong><button data-plus="${esc(i.id)}">+</button><button class="remove-btn" data-remove="${esc(i.id)}">🗑</button></div></div>`).join("");const totalValue=cart.reduce((sum,i)=>sum+Number(i.price)*Number(i.qty),0);total.textContent="Total: ₱"+totalValue.toLocaleString();box.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>changeQty(b.dataset.minus,-1));box.querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>changeQty(b.dataset.plus,1));box.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeItem(b.dataset.remove))}
+function openCart(){$("cartModal").classList.add("show");renderCart()} function closeCart(){$("cartModal").classList.remove("show")}
+function loggedIn(){return localStorage.getItem("shopHubLoggedIn")==="true"}
+function currentUser(){try{return JSON.parse(localStorage.getItem("shopHubCurrentUser")||"{}")}catch(e){return{}}}
+function updateAccount(){const btn=$("accountButton"),dash=$("dashboardButton");if(!loggedIn()){btn.textContent="Register / Login";btn.onclick=()=>location.href="register.html";dash.style.display="none";return}const u=currentUser();btn.textContent="Logout ("+(u.name||"Account")+")";btn.onclick=()=>{localStorage.removeItem("shopHubLoggedIn");localStorage.removeItem("shopHubCurrentUser");location.href="login.html"};if(u.role==='seller'){dash.style.display='inline-block';dash.textContent='Farmer Dashboard';dash.onclick=()=>location.href='farmer.html'}else dash.style.display='none'}
+function addDynamicProducts(){const holder=$("farmerProducts");if(!holder)return;const ps=arr(PRODUCTS_KEY);if(!ps.length){holder.innerHTML='';return}holder.innerHTML='<h3 style="color:#075c2f;margin:25px 0 12px">🌱 Products from Farmers</h3><div class="product-grid">'+ps.map(p=>`<article class="product" data-category="${esc(p.category||'all')}" data-name="${esc(p.name).toLowerCase()}" data-farmer="${esc(p.farmer).toLowerCase()}" data-location="${esc(p.location||'').toLowerCase()}" data-price="${Number(p.price)}"><div class="product-image"><img src="${esc(p.image||fallbackImage)}" alt="${esc(p.name)}" onerror="this.src='${fallbackImage}'"></div><div class="product-body"><span class="badge">Farmer Product</span><h3>${esc(p.name)}</h3><div class="farmer">👨‍🌾 Farmer: ${esc(p.farmer)}</div><div class="location">📍 ${esc(p.location||'Local')}</div><div class="price">₱${Number(p.price).toLocaleString()} <span class="unit">/ ${esc(p.unit||'unit')}</span></div><div class="farmer-stock" style="font-size:12px;color:#69746c;margin-top:5px">Available: ${Number(p.quantity||0)}</div><button class="add-btn" ${Number(p.quantity||0)<=0?'disabled style="opacity:.55;cursor:not-allowed"':''}>🛒 Idagdag sa Cart</button></div></article>`).join('')+'</div>';holder.querySelectorAll('.product').forEach(p=>{const b=p.querySelector('.add-btn');if(!b.disabled)b.onclick=()=>addCart({id:'farmer-'+p.dataset.name+'-'+p.dataset.farmer,name:p.querySelector('h3').textContent,price:Number(p.dataset.price),image:p.querySelector('img').src,farmer:p.dataset.farmer,unit:p.querySelector('.unit').textContent.replace('/ ','').trim(),button:b})})}
+function filter(){const q=$("searchInput").value.trim().toLowerCase();const active=document.querySelector(".category.active")?.dataset.category||"all";let shown=0;document.querySelectorAll('.product').forEach(p=>{const matchCat=active==='all'||p.dataset.category===active||p.dataset.category==='all';const hay=(p.dataset.name+' '+p.dataset.farmer+' '+p.dataset.location).toLowerCase();const ok=matchCat&&(!q||hay.includes(q));p.style.display=ok?'flex':'none';if(ok)shown++});$("noResults").style.display=shown?'none':'block'}
+baseProducts.forEach(p=>{const btn=p.querySelector('.add-btn');btn.addEventListener('click',()=>addCart({id:'base-'+p.dataset.name,name:p.querySelector('h3').textContent.trim(),price:Number(p.dataset.price),image:p.querySelector('img').src,farmer:(p.dataset.farmer||'').replace(/\b\w/g,c=>c.toUpperCase()),unit:p.querySelector('.unit').textContent.replace('/ ','').trim(),button:btn}))});
+document.querySelectorAll('.category').forEach(c=>c.onclick=()=>{document.querySelectorAll('.category').forEach(x=>x.classList.remove('active'));c.classList.add('active');filter()});$("searchInput").addEventListener('input',filter);$("searchBtn").onclick=filter;$("shopBtn").onclick=()=>$('products').scrollIntoView({behavior:'smooth'});$("cartButton").onclick=openCart;$("closeCart").onclick=closeCart;$("cartModal").onclick=e=>{if(e.target===$("cartModal"))closeCart()};
+$("checkoutBtn").onclick=()=>{if(!cart.length){toast('🛒 Walang laman ang cart.');return}if(!loggedIn()){closeCart();toast('Mag-login muna para mag-checkout.');setTimeout(()=>location.href='login.html',800);return}const buyer=currentUser();const sales=arr(SALES_KEY), orderId='ORD-'+Date.now();cart.forEach(i=>{const total=Number(i.price)*Number(i.qty),fee=total*FEE_RATE;sales.push({orderId,date:new Date().toISOString(),product:i.name,farmer:i.farmer||'Local Farmer',farmerEmail:i.farmerEmail||findFarmerEmail(i.farmer),buyer:buyer.name||buyer.email||'Buyer',buyerEmail:buyer.email||'',qty:i.qty,unit:i.unit||'unit',total,fee,earning:total-fee})});localStorage.setItem(SALES_KEY,JSON.stringify(sales));decreaseSellerStock();cart=[];saveCart();closeCart();toast('✅ Order completed! Sales record saved.')};
+function findFarmerEmail(name){const users=arr('finanihanUsers');const u=users.find(x=>x.role==='seller'&&String(x.name).toLowerCase()===String(name).toLowerCase());return u?.email||''}
+function decreaseSellerStock(){let ps=arr(PRODUCTS_KEY);cart.forEach(i=>{const p=ps.find(x=>x.name===i.name&&String(x.farmerEmail||'').toLowerCase()===String(i.farmerEmail||findFarmerEmail(i.farmer)).toLowerCase());if(p)p.quantity=Math.max(0,Number(p.quantity)-Number(i.qty))});localStorage.setItem(PRODUCTS_KEY,JSON.stringify(ps))}
+$("sellBtn").onclick=()=>{if(!loggedIn())location.href='register.html';else if(currentUser().role==='seller')location.href='farmer.html';else toast('Gamit ng Farmer/Seller account para magbenta.')};$("aboutBtn").onclick=()=>toast('FINANIHAN — simple marketplace para sa local farmers.');$("contactBtn").onclick=()=>toast('Email: support@finanihan.com');$("termsBtn").onclick=()=>toast('Demo system: localStorage ang gamit para sa records.');$("adminBtn").onclick=()=>location.href='admin.html';
+try{
+ const {data:cloudProducts,error}=await supabaseClient.from('products').select('*,profiles(full_name,email,location)').eq('active',true);
+ if(!error && cloudProducts?.length){ const holder=$("farmerProducts"); holder.innerHTML='<h3 style="color:#075c2f;margin:25px 0 12px">🌱 Products from Farmers</h3><div class="product-grid">'+cloudProducts.map(p=>`<article class="product" data-category="${esc(p.category)}" data-name="${esc(p.name).toLowerCase()}" data-farmer="${esc(p.profiles?.full_name||'').toLowerCase()}" data-location="${esc(p.profiles?.location||'').toLowerCase()}" data-price="${p.price}"><div class="product-image"><img src="${esc(p.image_url||fallbackImage)}" alt="${esc(p.name)}"></div><div class="product-body"><span class="badge">Farmer Product</span><h3>${esc(p.name)}</h3><div class="farmer">👨‍🌾 Farmer: ${esc(p.profiles?.full_name||'Farmer')}</div><div class="location">📍 ${esc(p.profiles?.location||'Local')}</div><div class="price">₱${Number(p.price).toLocaleString()} <span class="unit">/ ${esc(p.unit)}</span></div><div style="font-size:12px;color:#69746c">Available: ${p.quantity}</div><button class="add-btn">🛒 Idagdag sa Cart</button></div></article>`).join('')+'</div>'; holder.querySelectorAll('.product').forEach(card=>card.querySelector('.add-btn').onclick=()=>addCart({id:card.querySelector('h3').textContent,name:card.querySelector('h3').textContent,price:Number(card.dataset.price),image:card.querySelector('img').src,farmer:card.querySelector('.farmer').textContent.replace('👨‍🌾 Farmer: ',''),unit:card.querySelector('.unit').textContent.replace('/ ','').trim(),button:card.querySelector('.add-btn')})); filter();
+ }
+}catch(e){console.warn(e)} updateAccount();updateCartCount();renderCart();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!doctype html><html lang="tl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FINANIHAN - Register</title>
+<style>body{font-family:Arial;background:#f4f8f2;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:20px}.box{background:#fff;width:min(460px,100%);padding:30px;border-radius:18px;box-shadow:0 8px 30px #0001}h1,h2{text-align:center;color:#2e7d32}input,select,button{width:100%;padding:12px;margin:7px 0;border-radius:9px;border:1px solid #ccc;font:inherit}button{background:#2e7d32;color:#fff;border:0;font-weight:bold;cursor:pointer}.msg{padding:10px;border-radius:8px;margin:8px 0;display:none}.err{background:#fee;color:#b91c1c}.ok{background:#eaf7ea;color:#166534}</style></head><body><div class="box"><h1>🌾 FINANIHAN</h1><h2>Create Account</h2><div id="msg" class="msg"></div>
+<form id="f"><input id="name" placeholder="Full name" required><select id="method"><option value="email">Email</option><option value="phone">Mobile Number</option></select><input id="contact" placeholder="you@email.com" required><input id="password" type="password" minlength="6" placeholder="Password (min 6)" required><select id="role" required><option value="">Account type</option><option value="buyer">Consumer / Buyer</option><option value="seller">Farmer / Seller</option></select><button>Create Account & Send Code</button></form>
+<p style="text-align:center">Already registered? <a href="login.html">Log in</a></p></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script><script>
+const msg=document.getElementById('msg'); function show(t,ok=false){msg.textContent=t;msg.className='msg '+(ok?'ok':'err');msg.style.display='block'}
+method.onchange=()=>{contact.placeholder=method.value==='email'?'you@email.com':'09XXXXXXXXX';contact.type=method.value==='email'?'email':'tel'}; method.onchange();
+f.onsubmit=async e=>{e.preventDefault();show('');const email=method.value==='email'?contact.value.trim().toLowerCase():null, phone=method.value==='phone'?contact.value.trim():null;
+if(!email&&!phone)return show('Enter an email or mobile number.'); if(!role.value)return show('Select an account type.');
+const {data,error}=await supabaseClient.auth.signUp({email:email||undefined,phone:phone||undefined,password:password.value,options:{data:{full_name:name.value.trim(),role:role.value}}});
+if(error)return show(error.message);
+show('Verification code/link sent. Complete verification, then log in.',true);
+};</script></body></html>
