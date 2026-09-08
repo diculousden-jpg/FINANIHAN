@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="tl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FINANIHAN - Admin Dashboard</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f8f2;margin:0;color:#243024}.wrap{max-width:1050px;margin:auto;padding:25px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.card{background:#fff;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 5px 20px #0001}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.stat strong{font-size:30px;color:#2e7d32;display:block}.btn{padding:10px 14px;border:0;border-radius:9px;background:#2e7d32;color:white;font-weight:bold;cursor:pointer}.danger{background:#b91c1c}.muted{color:#69746c}table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid #ddd;text-align:left;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div><h1>🌾 FINANIHAN Admin</h1><div class="muted">Admin Dashboard</div></div><div><button class="btn" onclick="location.href='index.html'">Website</button> <button class="btn danger" id="logout">Logout</button></div></div>
+<div class="stats">
+<div class="card stat"><span>Mga Produkto</span><strong id="products">0</strong></div>
+<div class="card stat"><span>Mga User</span><strong id="users">0</strong></div>
+<div class="card stat"><span>Mga Order</span><strong id="orders">0</strong></div>
+<div class="card stat"><span>Sales</span><strong id="sales">₱0</strong></div>
+</div>
+<div class="card"><h2>Mga Produkto</h2><div id="productList" class="muted">Wala pang produkto.</div></div>
+<div class="card"><h2>Mga Order / Sales</h2><div id="salesList" class="muted">Wala pang order.</div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script>
+<script>
+const arr=k=>{try{const x=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}};
+(async()=>{
+ const {data:{session}}=await supabaseClient.auth.getSession();
+ if(!session || localStorage.getItem('finanihanAdmin')!=='true'){location.href='admin.html';return}
+ const ps=arr('finanihanProducts'), us=arr('finanihanUsers'), ss=arr('finanihanSales');
+ document.getElementById('products').textContent=ps.length;document.getElementById('users').textContent=us.length;document.getElementById('orders').textContent=ss.length;
+ const total=ss.reduce((n,x)=>n+Number(x.total||0),0);document.getElementById('sales').textContent='₱'+total.toLocaleString();
+ document.getElementById('productList').innerHTML=ps.length?'<table><tr><th>Produkto</th><th>Farmer</th><th>Presyo</th><th>Stock</th></tr>'+ps.map(p=>'<tr><td>'+esc(p.name)+'</td><td>'+esc(p.farmer||'')+'</td><td>₱'+Number(p.price||0).toLocaleString()+'</td><td>'+Number(p.quantity||0)+'</td></tr>').join('')+'</table>':'Wala pang produkto.';
+ document.getElementById('salesList').innerHTML=ss.length?'<table><tr><th>Order</th><th>Produkto</th><th>Buyer</th><th>Total</th></tr>'+ss.map(s=>'<tr><td>'+esc(s.orderId||'')+'</td><td>'+esc(s.product||'')+'</td><td>'+esc(s.buyer||'')+'</td><td>₱'+Number(s.total||0).toLocaleString()+'</td></tr>').join('')+'</table>':'Wala pang order.';
+})();
+function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+document.getElementById('logout').onclick=async()=>{await supabaseClient.auth.signOut();localStorage.removeItem('finanihanAdmin');location.href='admin.html'};
+</script>
+</body>
+</html>

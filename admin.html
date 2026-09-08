@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="tl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FINANIHAN - Admin Login</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f8f2;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:20px}
+.box{background:#fff;width:min(430px,100%);padding:30px;border-radius:18px;box-shadow:0 8px 30px #0001}
+h1,h2{text-align:center;color:#2e7d32}input,button{width:100%;padding:12px;margin:7px 0;border-radius:9px;border:1px solid #ccc;font:inherit;box-sizing:border-box}button{background:#2e7d32;color:#fff;border:0;font-weight:bold;cursor:pointer}.back{text-align:center;margin-top:16px}.msg{padding:10px;border-radius:8px;margin:8px 0;display:none}.err{background:#fee;color:#b91c1c}.ok{background:#eaf7ea;color:#166534}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>🌾 FINANIHAN</h1><h2>Admin Login</h2>
+<p style="text-align:center;color:#666">Para lamang sa administrator.</p>
+<div id="msg" class="msg"></div>
+<form id="f">
+<input id="email" type="email" placeholder="Admin email" required>
+<input id="password" type="password" placeholder="Admin password" required>
+<button type="submit">🔐 Mag-login bilang Admin</button>
+</form>
+<div class="back"><a href="index.html">← Bumalik sa FINANIHAN</a></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+/* SECURITY SETUP:
+   Palitan ang value sa ibaba ng email na gagamitin mo bilang Admin.
+   Huwag ilagay dito ang password.
+*/
+const ADMIN_EMAIL = "ILAGAY-DITO-ANG-ADMIN-EMAIL";
+const msg=document.getElementById('msg');
+function show(t,ok=false){msg.textContent=t;msg.className='msg '+(ok?'ok':'err');msg.style.display='block'}
+
+document.getElementById('f').onsubmit=async e=>{
+ e.preventDefault();show('');
+ const entered=email.value.trim().toLowerCase();
+ if(ADMIN_EMAIL.includes('ILAGAY-DITO')) return show('I-set muna ang ADMIN_EMAIL sa admin.html gamit ang admin email mo.');
+ if(entered!==ADMIN_EMAIL.toLowerCase()) return show('Walang access ang email na ito sa Admin.');
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email:entered,password:password.value});
+ if(error)return show('Hindi tama ang admin email o password.');
+ if(!data.session)return show('Hindi makumpleto ang admin login.');
+ localStorage.setItem('finanihanAdmin','true');
+ location.href='admin-dashboard.html';
+};
+</script>
+</body>
+</html>
