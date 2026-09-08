@@ -35,7 +35,6 @@ function show(t,ok=false){msg.textContent=t;msg.className='msg '+(ok?'ok':'err')
 document.getElementById('f').onsubmit=async e=>{
  e.preventDefault();show('');
  const entered=email.value.trim().toLowerCase();
- if(ADMIN_EMAIL.includes('jennilynullado4@gmail.com')) return show('I-set muna ang ADMIN_EMAIL sa admin.html gamit ang admin email mo.');
  if(entered!==ADMIN_EMAIL.toLowerCase()) return show('Walang access ang email na ito sa Admin.');
  const {data,error}=await supabaseClient.auth.signInWithPassword({email:entered,password:password.value});
  if(error)return show('Hindi tama ang admin email o password.');
